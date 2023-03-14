@@ -31,7 +31,7 @@ app.post('/api/data', (req, res) => {
   worksheet.addRow({ name, email, age });
 
   // Save the workbook to a file
-  workbook.xlsx.writeFile('data.xlsx')
+  workbook.xlsx.writeFile(__dirname + '/data.xlsx')
     .then(() => {
       console.log('Data added to Excel file');
       res.status(200).json({ message: 'Data added to Excel file' });
@@ -39,6 +39,20 @@ app.post('/api/data', (req, res) => {
     .catch((error) => {
       console.error(error);
       res.status(500).json({ error: 'Error adding data to Excel file' });
+    });
+});
+
+// Define a route to download the Excel file
+app.get('/api/data', (req, res) => {
+  workbook.xlsx.writeBuffer()
+    .then((buffer) => {
+      res.setHeader('Content-Disposition', 'attachment; filename=data.xlsx');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.send(buffer);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ error: 'Error generating Excel file' });
     });
 });
 
