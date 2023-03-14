@@ -30,8 +30,8 @@ app.post('/api/data', (req, res) => {
   // Add a new row to the worksheet with the form data
   worksheet.addRow({ name, email, age });
 
-  // Save the workbook to a file
-  workbook.xlsx.writeFile(__dirname + '/data.xlsx')
+  // Save the workbook to a file in the same directory as the server script
+  workbook.xlsx.writeFile('data.xlsx')
     .then(() => {
       console.log('Data added to Excel file');
       res.status(200).json({ message: 'Data added to Excel file' });
@@ -44,6 +44,7 @@ app.post('/api/data', (req, res) => {
 
 // Define a route to download the Excel file
 app.get('/api/data', (req, res) => {
+  // Send the Excel file as a response to the GET request
   workbook.xlsx.writeBuffer()
     .then((buffer) => {
       res.setHeader('Content-Disposition', 'attachment; filename=data.xlsx');
