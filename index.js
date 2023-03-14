@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const excel = require('exceljs');
+const path = require('path');
 
 const cors = require('cors');
 
@@ -31,10 +32,12 @@ app.post('/api/data', (req, res) => {
   worksheet.addRow({ name, email, age });
 
   // Save the workbook to a file in the same directory as the server script
-  workbook.xlsx.writeFile('data.xlsx')
+  const filePath = path.join(__dirname, 'data.xlsx');
+  workbook.xlsx.writeFile(filePath)
     .then(() => {
       console.log('Data added to Excel file');
-      res.status(200).json({ message: 'Data added to Excel file' });
+      console.log("File saved at:" + filePath);
+      res.status(200).json({ message: "File saved at:" + filePath });
     })
     .catch((error) => {
       console.error(error);
